@@ -1,33 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SevenZip;
-using System.Windows;
 using System.IO;
+using SevenZip;
 
-namespace SlickUpdater {
-    static class Unzippy {
-        static public void extract(string fileName, string directory) {
+namespace SlickAutoUpdate {
+    internal static class Unzippy {
+        public static void Extract(string fileName, string directory) {
             SevenZipExtractor.SetLibraryPath("7z.dll");
             try {
                 SevenZipExtractor extractor = new SevenZipExtractor(fileName);
-                extractor.Extracting += new EventHandler<ProgressEventArgs>(extr_Extracting);
-                extractor.FileExtractionStarted += new EventHandler<FileInfoEventArgs>(extr_FileExtractionStarted);
-                extractor.ExtractionFinished += new EventHandler<EventArgs>(extr_ExtractionFinished);
+                extractor.Extracting += extr_Extracting;
+                extractor.FileExtractionStarted += extr_FileExtractionStarted;
+                extractor.ExtractionFinished += extr_ExtractionFinished;
                 extractor.ExtractArchive(directory);
             } 
-            catch (System.IO.IOException e) {
+            catch (IOException e) {
                 
             }
         }
-        static void extr_Extracting(object sender, EventArgs e) {
+
+        private static void extr_Extracting(object sender, EventArgs e) {
 
         }
-        static void extr_FileExtractionStarted(object sender, FileInfoEventArgs e) {
+
+        private static void extr_FileExtractionStarted(object sender, FileInfoEventArgs e) {
         }
-        static void extr_ExtractionFinished(object sender, EventArgs e) {
+
+        private static void extr_ExtractionFinished(object sender, EventArgs e) {
             
         }
         /*
@@ -42,7 +40,7 @@ namespace SlickUpdater {
                 }
          * */
 
-        static private void directoryCopy(string sourceDirName, string destDirName) {
+        private static void DirectoryCopy(string sourceDirName, string destDirName) {
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
 
             // Check if source directory exists and return if it doesn't
@@ -68,7 +66,7 @@ namespace SlickUpdater {
             // Recursively (is that the right word?) copy subdirectories and files.
             foreach (DirectoryInfo subdir in dirs) {
                 string temppath = Path.Combine(destDirName, subdir.Name);
-                directoryCopy(subdir.FullName, temppath);
+                DirectoryCopy(subdir.FullName, temppath);
             }
         }
     }

@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Configuration;
 
 namespace SlickAutoUpdate
 {
     public class Repos
     {
-        public string name { get; set; }
-        public string url { get; set; }
-        public string server { get; set; }
-        public string joinText { get; set; }
-        public string subreddit { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string Server { get; set; }
+        public string JoinText { get; set; }
+        public string Subreddit { get; set; }
     }
 
-    public class versionfile
+    public class Versionfile
     {
-        public string version { get; set; }
-        public string download { get; set; }
-        public List<Repos> repos { get; set; }
+        public string Version { get; set; }
+        public string Download { get; set; }
+        public List<Repos> Repos { get; set; }
+    }
+
+    public class Settings
+    {
+        public static string RepoUrl => ConfigurationManager.AppSettings["RepoUrl"];
     }
 }

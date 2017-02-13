@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Net;
 using System.IO;
+using System.Net;
 
 namespace SlickAutoUpdate
 {
-    class reader
+    internal class Reader
     {
-        public static string webRead(string url)
+        public static string WebRead(string url)
         {
             WebClient client = new WebClient();
             Stream stream = client.OpenRead(url);

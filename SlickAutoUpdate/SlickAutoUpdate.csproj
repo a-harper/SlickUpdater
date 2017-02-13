@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="SevenZipSharp, Version=0.64.4984.34416, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,7 +54,9 @@
     <Compile Include="Zippy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="localversion">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

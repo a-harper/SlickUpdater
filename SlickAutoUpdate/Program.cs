@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Net;
+using System.Threading;
 using Newtonsoft.Json;
 
 namespace SlickAutoUpdate
 {
-    class Program
+    internal class Program
     {
-        static string[] localversion;
-        static WebClient client = new WebClient();
-        static versionfile slickversion;
-        static void Main(string[] args)
+        private static string[] _localversion;
+        private static readonly WebClient Client = new WebClient();
+        private static Versionfile _slickversion;
+
+        private static void Main(string[] args)
         {
-            string rawSlickJson = reader.webRead("http://arma.projectawesome.net/beta/repo/slickupdater/slickversion.json");
-            slickversion = JsonConvert.DeserializeObject<versionfile>(rawSlickJson);
+            var rawSlickJson = Reader.WebRead(Settings.RepoUrl);
+            _slickversion = JsonConvert.DeserializeObject<Versionfile>(rawSlickJson);
 
             if (File.Exists(Directory.GetCurrentDirectory() + "\\" + "localversion"))
             {
-                localversion = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\" + "localversion");
+                _localversion = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\" + "localversion");
                 //Console.WriteLine("Found localversion");
             }
             else { 
@@ -31,29 +28,29 @@ namespace SlickAutoUpdate
             
             try
             {
-            } catch (WebException e) {
+            } catch (WebException) {
                 Console.WriteLine("ERROR: Could not locate web server");
             }
             if (rawSlickJson != null)
             {
 
 
-                if (slickversion.version == localversion[0])
+                if (_slickversion.Version == _localversion[0])
                 {
                     Console.WriteLine("All is up to date so why are you launching this again?");
                 }
 
-                if (slickversion.version!= localversion[0])
+                if (_slickversion.Version!= _localversion[0])
                 {
                     Console.WriteLine("Found a new version of slick updater downloading now...");
-                    client.DownloadFile(slickversion.download, "newSlickVersion.zip");
+                    Client.DownloadFile(_slickversion.Download, "newSlickVersion.zip");
                     Console.WriteLine("Ok downloaded the new version just have to extract it now");
-                    SlickUpdater.Unzippy.extract("newSlickVersion.zip", Directory.GetCurrentDirectory());
+                    Unzippy.Extract("newSlickVersion.zip", Directory.GetCurrentDirectory());
                     File.Delete("newSlickVersion.zip");
                     Console.WriteLine("Ok its all updated killing this thread in 3 secs");
                 }
             }
-            System.Threading.Thread.Sleep(3000);
+            Thread.Sleep(3000);
         }
     }
 }
