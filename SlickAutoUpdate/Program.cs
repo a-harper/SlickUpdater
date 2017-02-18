@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using log4net;
 using Newtonsoft.Json;
@@ -27,6 +29,7 @@ namespace SlickAutoUpdate
             }
             else
             {
+                _localversion = new[] {"0"};
                 Log.Info("Current version not found in " + Settings.LocalVersionFile);
                 Console.WriteLine("Did not find local version at " + Settings.LocalVersionFile);
             }
@@ -41,7 +44,7 @@ namespace SlickAutoUpdate
             {
                 Log.Warn("Couldn't connect to the repo! Aborting.");
                 Console.WriteLine("Unable to connect to repo. Please check your internet connection and try again.");
-                Console.WriteLine("Press any key to exit");
+                Console.WriteLine("Press return to exit");
                 Console.ReadLine();
             }
 
@@ -50,7 +53,7 @@ namespace SlickAutoUpdate
             if (_slickversion.Version == _localversion[0])
             {
                 Log.Info("Local and remote versions are both " + _slickversion.Version);
-                Console.WriteLine("Current version is up to date. Press any key to exit.");
+                Console.WriteLine("Current version is up to date. Press return to exit.");
                 Console.ReadLine();
             }
             else
@@ -65,7 +68,7 @@ namespace SlickAutoUpdate
                 {
                     Log.Warn("Issue downloading new version! " + e.Message);
                     Console.WriteLine("Error downloading new version, check log for details.");
-                    Console.WriteLine("Press any key to exit");
+                    Console.WriteLine("Press return to exit");
                     Console.ReadLine();
                     return;
                 }
@@ -83,7 +86,7 @@ namespace SlickAutoUpdate
                 {
                     Log.Warn("Couldn't extract file! " + e.Message);
                     Console.WriteLine("Problem extracting file, please see log for details");
-                    Console.WriteLine("Press any key to exit");
+                    Console.WriteLine("Press return to exit");
                     Console.ReadLine();
                     return;
                 }
@@ -100,7 +103,22 @@ namespace SlickAutoUpdate
                 }
                 
                 Console.WriteLine("Slick Updater now version " + _slickversion.Version);
-                Console.WriteLine("Press any key to exit");
+                try
+                {
+                    Log.Info("Updating localversion file to match newly downloaded version.");
+                    using (var file = File.Open(Settings.LocalVersionFile, FileMode.Create))
+                    {
+                        var writedata = Encoding.ASCII.GetBytes(_slickversion.Version);
+                        file.Write(writedata, 0, writedata.Length);
+                    }
+                    Log.Info("localversion file successfully updated.");
+                }
+                catch(Exception e)
+                {
+                    Log.Warn("Couldn't update localversion file! " + e.Message);
+                    Console.WriteLine("Issue updating localversion file. Check log for messages.");
+                }
+                Console.WriteLine("Press return to exit");
                 Console.ReadLine();
 
             }
