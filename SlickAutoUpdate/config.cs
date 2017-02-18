@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 
 namespace SlickAutoUpdate
 {
@@ -22,5 +23,6 @@ namespace SlickAutoUpdate
     public class Settings
     {
         public static string RepoUrl => ConfigurationManager.AppSettings["RepoUrl"];
+        public static string LocalVersionFile => Directory.GetCurrentDirectory() + "\\" + "localversion";
     }
 }

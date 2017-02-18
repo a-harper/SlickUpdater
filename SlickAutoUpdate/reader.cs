@@ -8,11 +8,18 @@ namespace SlickAutoUpdate
     {
         public static string WebRead(string url)
         {
-            WebClient client = new WebClient();
-            Stream stream = client.OpenRead(url);
-            StreamReader reader = new StreamReader(stream);
-            String content = reader.ReadToEnd();
-            return content;
+            var client = new WebClient();
+            var stream = client.OpenRead(url);
+            if (stream != null)
+            {
+                var reader = new StreamReader(stream);
+                var content = reader.ReadToEnd();
+                return content;
+            }
+            else
+            {
+                throw new ArgumentNullException(url);
+            }
         }
     }
 }
